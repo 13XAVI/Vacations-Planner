@@ -1,0 +1,55 @@
+import logging
+from fastapi import HTTPException
+from sqlalchemy import Select, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.models.users import Users
+from app.schemas.users import signup_req, signin_req
+from app.utils.harsh import hash_user_password
+from app.utils.jwt import create_access_token
+
+logger = logging.getLogger(__name__)
+async def create_new_user(user :signup_req ,db :AsyncSession):
+    try:
+        hashed_pass = hash_user_password(user.password)
+        new_user = Users(
+            username=user.username,
+            email=user.email,
+            password=hashed_pass
+        )
+
+        db.add(new_user)
+        await db.commit()
+        await db.refresh(new_user)
+        return new_user
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(str(e))
+
+
+
+async  def signIn(credential:signin_req, db:AsyncSession):
+    try:
+        result = await  db.execute(
+            Select(Users)
+            .where(Users.email == credential.email)
+        )
+        user = result.scalars().first()
+        token = create_access_token({"sub":user.email})
+
+        return token
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(str(e))
+
+
+async def get_all_users_db(db: AsyncSession):
+    try:
+        result = await db.execute(select(Users))
+        users = result.scalars().all()
+        return  users
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(str(e))
