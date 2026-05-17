@@ -23,31 +23,62 @@ Users can:
 - Create and manage trips
 - Build personalized itineraries with daily activities
 - Securely access protected routes using JWT authentication
+
 ## ⚙️ Setup Instructions
-
-### 1. Clone the repository
-
-    git clone https://github.com/13XAVI/Vacations-Planner.git
-    cd vacation-planner    
-
-### 2. Create virtual environment
-    uv venv
-### 3. Install the dependencies
-
-If using requirements.txt:
-
+ 
+### Prerequisites
+ 
+- Python 3.13+
+- PostgreSQL
+- [uv](https://github.com/astral-sh/uv) package manager
+---
+### 1. Clone the Repository
+ 
 ```bash
-uv pip install -r requirements.txt
+git clone https://github.com/13XAVI/Vacations-Planner.git
+cd vacation-planner    
 ```
-
-If using pyproject.toml:
-
+---
+ 
+### 2. Create a Virtual Environment & Install Dependencies
+ 
 ```bash
+uv venv
+source .venv/bin/activate        # Linux/Mac
+.venv\Scripts\activate           # Windows
+ 
+uv pip install -r requirements.txt
+# or if using pyproject.toml
 uv sync
 ```
-
-### Running the Application
-
+---
+ 
+### 3. Configure Environment Variables
+ 
+Copy the example env file and fill in your values:
+ 
 ```bash
-uv run uvicorn app.main:app --reload
+.env.example
+```
+---
+ 
+### 4. Create the Database
+ 
+Make sure PostgreSQL is running, then create your database:
+ 
+```sql
+CREATE DATABASE vacation_planner;
+```
+---
+### 5. Run Migrations
+ 
+```bash
+alembic upgrade head
+```
+---
+ 
+### 6. Start the Server
+ 
+```bash
+uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8080
 ```
