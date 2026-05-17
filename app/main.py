@@ -5,6 +5,8 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from app.api.routes.auth import router as auth_router
 from app.api.routes.users import router as user_router
+from app.api.routes.trips import router as trips_router
+from app.api.routes.itinerary import router as itineraries_router
 from fastapi import FastAPI
 
 from app.api.routes_deps import logging_middleware
@@ -39,6 +41,8 @@ app.add_middleware(
 app.add_middleware(BaseHTTPMiddleware, dispatch=logging_middleware)
 app.include_router(auth_router)
 app.include_router(user_router)
+app.include_router(trips_router)
+app.include_router(itineraries_router)
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app",host="127.0.0.1",port=8080,reload=True)
