@@ -1,10 +1,11 @@
 import uuid
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
 
 class trip_req(BaseModel):
-    destination: str
-    days: int
-    budget: float
+    destination: str = Field(min_length=1,description="should be more than on character")
+    days: int = Field(ge=1, description="days must be at least more than one")
+    budget: float = Field(gt=0,description="value should be a positive number")
     trip_style: str
 
 class trip_res(BaseModel):

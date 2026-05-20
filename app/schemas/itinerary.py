@@ -1,10 +1,14 @@
 import uuid
 from typing import List
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
 
 class DayPlan(BaseModel):
-    day: int
-    activities: List[str]
+    day: int = Field(ge=1)
+    activities: List[str] = Field(
+        min_length=1,
+        description="List of trip activities"
+    )
 
 class itinerary_req(BaseModel):
     trip_id: uuid.UUID
