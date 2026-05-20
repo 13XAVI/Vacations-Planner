@@ -1,6 +1,7 @@
 import logging
 import uvicorn
 from contextlib import asynccontextmanager
+from fastapi.exceptions import RequestValidationError
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from app.api.routes.auth import router as auth_router
@@ -11,6 +12,7 @@ from fastapi import FastAPI
 
 from app.api.routes_deps import logging_middleware
 from app.core.lifespan_db import create_db_tables
+from app.core.validation import Validation_Exeptions_Handler
 
 logging.basicConfig(
     level=logging.INFO,
@@ -38,6 +40,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_exception_handler(RequestValidationError,Validation_Exeptions_Handler)
 app.add_middleware(BaseHTTPMiddleware, dispatch=logging_middleware)
 app.include_router(auth_router)
 app.include_router(user_router)
