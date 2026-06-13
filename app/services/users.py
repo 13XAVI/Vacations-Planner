@@ -41,6 +41,8 @@ async  def signIn(credential:signin_req, db:AsyncSession):
             .where(Users.email == credential.email)
         )
         user = result.scalars().first()
+        if not user:
+            raise HTTPException(status_code = 404, detail = "user not found")
         token = create_access_token({"sub":user.email})
 
         return token

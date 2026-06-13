@@ -5,7 +5,7 @@ from fastapi.security import  HTTPBearer
 
 from app.core.config import settings
 
-bearer_scheme = HTTPBearer()
+bearer_scheme = HTTPBearer(auto_error=False)
 def create_access_token(data: dict) -> str:
     payload = data.copy()
     expire = datetime.utcnow() + timedelta(minutes=settings.TOKEN_EXPIRE_MINUTES)
