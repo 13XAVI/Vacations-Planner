@@ -1,4 +1,6 @@
 import uuid
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
@@ -14,7 +16,6 @@ class trip_res(BaseModel):
     days: int
     budget: float
     trip_style: str
-    message: str = "Trip created successfully"
-
+    message: Optional[str] = None
     class Config:
-        from_attributes = True
+        from_attribute = True

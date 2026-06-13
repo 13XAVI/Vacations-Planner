@@ -12,11 +12,11 @@ router = APIRouter(prefix="/itineraries", tags=["itineraries"])
 
 @router.post("", status_code=HTTPStatus.CREATED)
 async def create(
-    data: itinerary_req,
+    trip_id: uuid.UUID,
     current_user: Users = Depends(get_current_user),
     session: AsyncSession = Depends(create_session)
 ):
-    itinerary = await create_itinerary(data, current_user.id, session)
+    itinerary = await create_itinerary(trip_id, current_user.id, session)
     return {
         "trip_id": itinerary.trip_id,
         "itinerary": itinerary.days,
