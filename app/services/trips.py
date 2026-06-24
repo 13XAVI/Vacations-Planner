@@ -3,12 +3,12 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.trips import Trips
-from app.schemas.trips import trip_req
+from app.schemas.trips import TripReq
 from fastapi import HTTPException, status
 
 logger = logging.getLogger(__name__)
 
-async def create_trip(data: trip_req, user_id: uuid.UUID, db: AsyncSession):
+async def create_trip(data: TripReq, user_id: uuid.UUID, db: AsyncSession):
     try:
         trip = Trips(
             destination=data.destination,
@@ -43,7 +43,7 @@ async def get_trip_by_id(trip_id: uuid.UUID, user_id: uuid.UUID, db: AsyncSessio
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Trip not found")
     return trip
 
-async def update_trip(trip_id: uuid.UUID, data: trip_req, user_id: uuid.UUID, db: AsyncSession):
+async def update_trip(trip_id: uuid.UUID, data: TripReq, user_id: uuid.UUID, db: AsyncSession):
     try:
         trip = await get_trip_by_id(trip_id, user_id, db)
         trip.destination = data.destination

@@ -8,19 +8,19 @@ from starlette.requests import Request
 from app.api.routes_deps import get_current_user, require_admin
 from app.core.lifespan_db import create_session
 from app.models.users import Users
-from app.schemas.trips import trip_req, trip_res
+from app.schemas.trips import TripReq, TripRes
 from app.services.trips import create_trip, get_all_trips, get_trip_by_id, update_trip, delete_trip
 
 router = APIRouter(prefix="/trips", tags=["trips"])
 
-@router.post("", status_code=HTTPStatus.CREATED, response_model=trip_res)
+@router.post("", status_code=HTTPStatus.CREATED, response_model=TripRes)
 async def create(
-    data: trip_req,
+    data: TripReq,
     current_user: Users = Depends(get_current_user),
     session: AsyncSession = Depends(create_session)
 ):
     trip =  await create_trip(data, current_user.id, session)
-    return trip_res(
+    return TripRes(
         id = trip.id,
         destination=trip.destination,
         days=trip.days,
@@ -29,14 +29,14 @@ async def create(
         message="Trip successfully Created"
     )
 
-@router.get("", status_code=HTTPStatus.OK, response_model=List[trip_res])
+@router.get("", status_code=HTTPStatus.OK, response_model=List[TripRes])
 async def get_all(
     current_user: Users = Depends(get_current_user),
     session: AsyncSession = Depends(create_session)
 ):
     return await get_all_trips(current_user.id, session)
 
-@router.get("/{trip_id}", status_code=HTTPStatus.OK, response_model=trip_res)
+@router.get("/{trip_id}", status_code=HTTPStatus.OK, response_model=TripRes)
 async def get_one(
     trip_id: uuid.UUID,
     current_user: Users = Depends(get_current_user),
@@ -44,15 +44,15 @@ async def get_one(
 ):
     return await get_trip_by_id(trip_id, current_user.id, session)
 
-@router.put("/{trip_id}", status_code=HTTPStatus.OK, response_model=trip_res)
+@router.put("/{trip_id}", status_code=HTTPStatus.OK, response_model=TripRes)
 async def update(
     trip_id: uuid.UUID,
-    data: trip_req,
+    data: TripReq,
     current_user: Users = Depends(get_current_user),
     session: AsyncSession = Depends(create_session)
 ):
     trip =  await update_trip(trip_id, data, current_user.id, session)
-    return trip_res(
+    return TripRes(
         id=trip.id,
         destination=trip.destination,
         days=trip.days,

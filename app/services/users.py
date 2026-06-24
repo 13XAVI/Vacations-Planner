@@ -3,13 +3,13 @@ from fastapi import HTTPException
 from sqlalchemy import Select, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.users import Users
-from app.schemas.users import signup_req, signin_req
+from app.schemas.users import SignupReq, SigningReq
 from app.utils.hash import hash_user_password
 from app.utils.jwt import create_access_token
 from starlette import status
 
 logger = logging.getLogger(__name__)
-async def create_new_user(user :signup_req ,db :AsyncSession):
+async def create_new_user(user :SignupReq ,db :AsyncSession):
     try:
         result = await db.execute(select(Users).where(Users.email == user.email))
         user = result.scalar_one_or_none()
@@ -34,7 +34,7 @@ async def create_new_user(user :signup_req ,db :AsyncSession):
 
 
 
-async  def signIn(credential:signin_req, db:AsyncSession):
+async  def signIn(credential:SigningReq, db:AsyncSession):
     try:
         result = await  db.execute(
             Select(Users)

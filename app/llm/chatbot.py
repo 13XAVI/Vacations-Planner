@@ -22,8 +22,7 @@ def generate_itineraries(destination: str, days: int, budget: float, travel_styl
     with client.messages.stream(**params) as stream:
         for chunk in stream.text_stream:
             full_prompt += chunk
-            print(chunk, end="", flush=True)
-    print()
+
     raw_response = full_prompt.strip()
     if raw_response.startswith("```"):
         raw_response = raw_response.split("```")[1]

@@ -10,11 +10,11 @@ class DayPlan(BaseModel):
         description="List of trip activities"
     )
 
-class itinerary_req(BaseModel):
+class ItineraryReq(BaseModel):
     trip_id: uuid.UUID
     days: List[DayPlan]
 
-class itinerary_res(BaseModel):
+class ItineraryRes(BaseModel):
     trip_id: uuid.UUID
     itinerary: List[DayPlan]
     message: str = "Itinerary created successfully"
