@@ -5,16 +5,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.trips import Trips
 from app.schemas.trips import TripReq
 from fastapi import HTTPException, status
+from app.utils.validators import validate_trip_request
 
 logger = logging.getLogger(__name__)
 
 async def create_trip(data: TripReq, user_id: uuid.UUID, db: AsyncSession):
     try:
         trip = Trips(
-            destination=data.destination,
-            days=data.days,
-            budget=data.budget,
-            trip_style=data.trip_style,
+            destination=trip.destination,
+            days=trip.days,
+            budget=trip.budget,
+            trip_style=trip.trip_style,
             user_id=user_id
         )
         db.add(trip)

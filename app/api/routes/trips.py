@@ -15,11 +15,11 @@ router = APIRouter(prefix="/trips", tags=["trips"])
 
 @router.post("", status_code=HTTPStatus.CREATED, response_model=TripRes)
 async def create(
-    data: TripReq,
+    trip_data: TripReq,
     current_user: Users = Depends(get_current_user),
     session: AsyncSession = Depends(create_session)
 ):
-    trip =  await create_trip(data, current_user.id, session)
+    trip =  await create_trip(trip_data, current_user.id, session)
     return TripRes(
         id = trip.id,
         destination=trip.destination,
