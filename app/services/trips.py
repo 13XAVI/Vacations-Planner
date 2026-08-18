@@ -5,17 +5,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.trips import Trips
 from app.schemas.trips import TripReq
 from fastapi import HTTPException, status
-from app.utils.validators import validate_trip_request
 
 logger = logging.getLogger(__name__)
 
 async def create_trip(data: TripReq, user_id: uuid.UUID, db: AsyncSession):
     try:
         trip = Trips(
-            destination=trip.destination,
-            days=trip.days,
-            budget=trip.budget,
-            trip_style=trip.trip_style,
+            destination=data.destination,
+            days=data.days,
+            budget=data.budget,
+            trip_style=data.trip_style,
             user_id=user_id
         )
         db.add(trip)
@@ -25,15 +24,14 @@ async def create_trip(data: TripReq, user_id: uuid.UUID, db: AsyncSession):
     except Exception as e:
         await db.rollback()
         logger.error(str(e))
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
 async def get_all_trips(user_id: uuid.UUID, db: AsyncSession):
     try:
         result = await db.execute(select(Trips).where(Trips.user_id == user_id))
         return result.scalars().all()
     except Exception as e:
         logger.error(str(e))
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
 
 async def get_trip_by_id(trip_id: uuid.UUID, user_id: uuid.UUID, db: AsyncSession):
     result = await db.execute(
@@ -59,7 +57,7 @@ async def update_trip(trip_id: uuid.UUID, data: TripReq, user_id: uuid.UUID, db:
     except Exception as e:
         await db.rollback()
         logger.error(str(e))
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))
 
 
 async def delete_trip(trip_id: uuid.UUID, user_id: uuid.UUID, db: AsyncSession):
@@ -72,4 +70,4 @@ async def delete_trip(trip_id: uuid.UUID, user_id: uuid.UUID, db: AsyncSession):
     except Exception as e:
         await db.rollback()
         logger.error(str(e))
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(e))

@@ -2,7 +2,7 @@ import logging
 import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.llm.message import buidld_iteneraries
+from app.llm.itinerary_builder import buidld_iteneraries
 from app.models.trips import Trips
 from app.models.itinerary import Itineraries
 from fastapi import HTTPException, status

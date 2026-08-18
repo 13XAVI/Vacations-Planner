@@ -17,6 +17,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-from app.core.config import settings
-print(id(settings), type(settings.TEMPERATURE), settings.TEMPERATURE)
