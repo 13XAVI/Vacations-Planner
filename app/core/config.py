@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     SECRET_KEY:str
     ALGORITHM:str
     MODEL_NAME:str
+    MAX_TOKEN:int
+    TEMPERATURE:float
     model_config = ConfigDict( env_file=BASE_DIR / ".env",env_file_encoding="utf-8")
+
 
 settings = Settings()

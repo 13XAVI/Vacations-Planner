@@ -1,23 +1,23 @@
 import uuid
 from typing import List
-from pydantic import BaseModel, Field
-
+from pydantic import BaseModel, ConfigDict, Field
 
 class DayPlan(BaseModel):
-    day: int = Field(ge=1)
-    activities: List[str] = Field(
-        min_length=1,
-        description="List of trip activities"
-    )
-
+    model_config = ConfigDict(extra="forbid")
+    day: int
+    activities: list[str]
 class ItineraryReq(BaseModel):
     trip_id: uuid.UUID
     days: List[DayPlan]
 
-class ItineraryRes(BaseModel):
-    trip_id: uuid.UUID
+class ItineraryContent(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     itinerary: List[DayPlan]
+    estimated_cost: float | None = None
+    accommodation: str | None = None
+    notes: str | None = None
     message: str = "Itinerary created successfully"
 
-    class Config:
-        from_attributes = True
+
+class ItineraryRes(ItineraryContent):
+    trip_id: uuid.UUID
